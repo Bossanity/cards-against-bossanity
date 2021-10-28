@@ -11,6 +11,7 @@ function loadSprite(name) {
 
 //establish constants
 const frictionFactor = 0.85;
+const rad90 = Math.PI/180*90;
 
 //Define classes and functions
 class Unit extends PIXI.Graphics {
@@ -67,7 +68,22 @@ function moveUnit(unit, delta) {
 function createProjectile(owner, speed, direction) {
     // function to create projectile, store it in list and also get it onto the screen
     let proj = projectiles.push(new Projectile(owner, speed, direction));
-    app.stage.addChild(projectiles[proj-1]);
+    proj = projectiles[proj-1];
+    switch(direction) {
+        case "Right":
+            proj.rotation = 0;
+            break;
+        case "Down":
+            proj.rotation = rad90;
+            break;
+        case "Left":
+            proj.rotation = rad90*2;
+            break;
+        case "Up":
+            proj.rotation = rad90*3;
+            break;
+    }
+    app.stage.addChild(proj);
 }
 
 function moveProjectile(proj, delta) {
@@ -75,16 +91,16 @@ function moveProjectile(proj, delta) {
     switch(proj.direction) {
         case "Left":
             proj.x -= proj.speed * delta;
-            return;
+            break;
         case "Right":
             proj.x += proj.speed * delta;
-            return;
+            break;
         case "Up":
             proj.y -= proj.speed * delta;
-            return;
+            break;
         case "Down":
             proj.y += proj.speed * delta;
-            return;
+            break;
     }
 }
 
