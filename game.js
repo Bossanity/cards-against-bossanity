@@ -1,6 +1,6 @@
 //unit name, height, width, movement speed
-createUnit("player", 50, 50, 75);
-createUnit("boss", 125, 125, 20);
+createUnit("boss", {size: 60, moveSpeed: 20, color: 0x660000});
+createUnit("player", {size: 25, moveSpeed: 75, color: 0x000066});
 
 //Global ticker
 let elapsed = 0.0; //Total frames
@@ -15,4 +15,5 @@ app.ticker.add((delta) => {
         //projectiles always move in their predefined direction
         moveProjectile(projectiles[i], delta);
     }
+    bossAiMove();
 });

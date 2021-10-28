@@ -25,7 +25,7 @@ document.addEventListener('keydown', function(key) {
                 direction = 270;
                 break;
         }
-        createProjectile("player", {direction: direction, lifespan: 40});
+        createProjectile("player", {direction: direction});
     }
 })
 
@@ -33,6 +33,6 @@ document.addEventListener('keyup', function(key) {
     let movements = ['KeyW', 'KeyA', 'KeyS', 'KeyD'];
     if(movements.includes(key.code)) {
         let input = key.code.slice(3,4);
-        units.player.moving.splice(units.player.moving.indexOf(input), 1); //remove keypress
+        units.player.moving.remove(input); //remove keypress from moving array
     }
 })
