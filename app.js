@@ -30,7 +30,7 @@ class Unit extends PIXI.Graphics {
 //Similiar to unit except always moving in one direction
 //maybe in the future add slight curving if shot while moving (think binding of isaac)
 class Projectile extends PIXI.Graphics {
-    constructor(owner, speed, input) {
+    constructor(owner, speed, direction) {
         super();
         this.x = owner.x; //Perhaps hardcoding this is fine
         this.y = owner.y; //For projectiles generated based on the environment could use dummy units as owners
@@ -38,7 +38,7 @@ class Projectile extends PIXI.Graphics {
         this.drawRect(0, 0, 25, 5);
         this.endFill();
         this.speed = speed;
-        this.direction = input;
+        this.direction = direction;
     }
 }
 
@@ -69,37 +69,24 @@ function createProjectile(owner, speed, direction) {
     // function to create projectile, store it in list and also get it onto the screen
     let proj = projectiles.push(new Projectile(owner, speed, direction));
     proj = projectiles[proj-1];
-    switch(direction) {
-        case "Right":
-            proj.rotation = 0;
-            break;
-        case "Down":
-            proj.rotation = rad90;
-            break;
-        case "Left":
-            proj.rotation = rad90*2;
-            break;
-        case "Up":
-            proj.rotation = rad90*3;
-            break;
-    }
+    proj.rotation = Math.PI/180*proj.direction;
     app.stage.addChild(proj);
 }
 
 function moveProjectile(proj, delta) {
     //proj.direction being the predefined direction that the projectile will always move in
     switch(proj.direction) {
-        case "Left":
-            proj.x -= proj.speed * delta;
-            break;
-        case "Right":
+        case 0:
             proj.x += proj.speed * delta;
             break;
-        case "Up":
-            proj.y -= proj.speed * delta;
-            break;
-        case "Down":
+        case 90:
             proj.y += proj.speed * delta;
+            break;
+        case 180:
+            proj.x -= proj.speed * delta;
+            break;
+        case 270:
+            proj.y -= proj.speed * delta;
             break;
     }
 }
@@ -128,7 +115,22 @@ document.addEventListener('keydown', function(key) {
     }
     if(shoots.includes(key.code)) {
         let input = key.code.slice(5,10); //'Left', 'Right', 'Up', 'Down'
-        createProjectile(units.player, 10, input);
+        let direction;
+        switch(input) {
+            case "Right":
+                direction = 0;
+                break;
+            case "Down":
+                direction = 90;
+                break;
+            case "Left":
+                direction = 180;
+                break;
+            case "Up":
+                direction = 270;
+                break;
+        }
+        createProjectile(units.player, 10, direction);
     }
 })
 document.addEventListener('keyup', function(key) {
