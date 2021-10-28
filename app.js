@@ -11,7 +11,7 @@ function loadSprite(name) {
 
 //establish constants
 const frictionFactor = 0.85;
-const rad90 = Math.PI/180*90;
+const rad = Math.PI/180;
 
 //Define classes and functions
 class Unit extends PIXI.Graphics {
@@ -69,26 +69,14 @@ function createProjectile(owner, speed, direction) {
     // function to create projectile, store it in list and also get it onto the screen
     let proj = projectiles.push(new Projectile(owner, speed, direction));
     proj = projectiles[proj-1];
-    proj.rotation = Math.PI/180*proj.direction;
+    proj.rotation = rad*(proj.direction-90);
     app.stage.addChild(proj);
 }
 
 function moveProjectile(proj, delta) {
-    //proj.direction being the predefined direction that the projectile will always move in
-    switch(proj.direction) {
-        case 0:
-            proj.x += proj.speed * delta;
-            break;
-        case 90:
-            proj.y += proj.speed * delta;
-            break;
-        case 180:
-            proj.x -= proj.speed * delta;
-            break;
-        case 270:
-            proj.y -= proj.speed * delta;
-            break;
-    }
+    //proj.direction being the predefined direction in degrees
+   proj.x += proj.speed * delta * Math.sin(rad*proj.direction);
+   proj.y += proj.speed * delta * Math.sin(rad*(proj.direction-90));
 }
 
 //load units
@@ -117,16 +105,16 @@ document.addEventListener('keydown', function(key) {
         let input = key.code.slice(5,10); //'Left', 'Right', 'Up', 'Down'
         let direction;
         switch(input) {
-            case "Right":
+            case "Up":
                 direction = 0;
                 break;
-            case "Down":
+            case "Right":
                 direction = 90;
                 break;
-            case "Left":
+            case "Down":
                 direction = 180;
                 break;
-            case "Up":
+            case "Left":
                 direction = 270;
                 break;
         }
