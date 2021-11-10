@@ -3,8 +3,8 @@ document.addEventListener('keydown', function(key) {
     let shoots = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
     if(movements.includes(key.code)) {
         let input = key.code.slice(3,4); //'W', 'A', 'S', 'D'
-        if(units.player.moving.indexOf(input)===-1) { //Only add keypress if it doesn't exist
-            units.player.moving.push(input);
+        if(units['player'].moving.indexOf(input)===-1) { //Only add keypress if it doesn't exist
+            units['player'].moving.push(input);
         }
         return;
     }
@@ -25,7 +25,7 @@ document.addEventListener('keydown', function(key) {
                 direction = 270;
                 break;
         }
-        createProjectile("player", {direction: direction});
+        createProjectile("arrow", "player", {direction: direction});
     }
 })
 
@@ -33,6 +33,6 @@ document.addEventListener('keyup', function(key) {
     let movements = ['KeyW', 'KeyA', 'KeyS', 'KeyD'];
     if(movements.includes(key.code)) {
         let input = key.code.slice(3,4);
-        units.player.moving.remove(input); //remove keypress from moving array
+        units['player'].moving.remove(input); //remove keypress from moving array
     }
 })
