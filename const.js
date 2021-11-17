@@ -5,8 +5,12 @@ let app = new PIXI.Application({
     });
 document.body.appendChild(app.view);
 
-function loadSprite(name) {
-    return PIXI.Sprite.from('assets/'+name+'.png');
+let sheet;
+PIXI.Loader.shared.add("assets/sprites.json").load(setup);
+
+function setup() {
+    sheet = PIXI.Loader.shared.resources["assets/sprites.json"].spritesheet;
+    run();
 }
 
 //establish constants
@@ -17,33 +21,39 @@ let units = {}
 let projectiles = [];
 let cards = {};
 let hand = [];
+let animations = {};
 
 //Define classes
-class Unit extends PIXI.Graphics {
-    constructor(props) {
-        super();
+//Unit properties: moveSpeed, scale
+class Unit extends PIXI.AnimatedSprite {
+    constructor(spriteName, props) {
+        let sprite = sheet.textures[spriteName+".png"];
+        super([sprite]);
+        this.baseSprite = spriteName;
+        this.anchor.set(0.5);
         this.x = 100;
         this.y = 100;
-        //the color and filling section may be completely reworked once we have sprites
-        props.color !== undefined ? this.beginFill(props.color) : this.beginFill(0x000000);
-        props.size !== undefined ? this.drawCircle(0, 0, props.size, props.size) : this.drawCircle(0, 0, 50, 50);
-        this.endFill();
+        if(props.scale !== undefined) {this.scale.set(props.scale)}
         this.moving = [];
         this.speedX = 0;
         this.speedY = 0;
         props.moveSpeed !== undefined ? this.moveSpeed = props.moveSpeed : this.moveSpeed = 75;
     }
+    resetAnimation() {
+        this.textures = [sheet.textures[this.baseSprite+".png"]];
+    }
 }
 
-class Projectile extends PIXI.Graphics {
-    constructor(owner, props) { //props will contain all properties, allowing for default values
-        super();
+//Projectile properties: speed, scale, direction, lifespan
+class Projectile extends PIXI.Sprite {
+    constructor(spriteName, owner, props) { //props will contain all properties, allowing for default values
+        let sprite = sheet.textures[spriteName+".png"];
+        super(sprite);
+        this.anchor.set(0.5);
         this.owner = owner;
         this.x = units[owner].x;
         this.y = units[owner].y;
-        this.beginFill(0xff0000);
-        props.size !== undefined ? this.drawRect(0, 0, props.size, props.size) : this.drawRect(0,0,8,8);
-        this.endFill();
+        if(props.scale !== undefined) {this.scale.set(props.scale)}
         this.birth = elapsed;
         props.lifespan !== undefined ? this.lifespan = props.lifespan : this.lifespan = 60;
         props.speed !== undefined ? this.speed = props.speed : this.speed = 12;
