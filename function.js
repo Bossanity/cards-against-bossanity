@@ -27,12 +27,14 @@ function moveUnit(unit, delta) {
     //Some sort of genius solution
     if(input.includes("D")) {
         unit.speedX+=1;
+        unit.scale.x = Math.abs(unit.scale.x); //Face right
     }
     if(input.includes("S")) {
         unit.speedY+=1;
     }
     if(input.includes("A")) {
         unit.speedX-=1;
+        unit.scale.x = Math.abs(unit.scale.x)*-1; //Face left
     }
     if(input.includes("W")) {
         unit.speedY-=1;
@@ -51,6 +53,7 @@ function moveProjectile(proj, delta) {
         app.stage.removeChild(proj);
         projectiles.splice(index, 1);
     }
+    proj.rotation = rad*(proj.direction-90); //Update rotation(if it changes)
     proj.x += proj.speed * delta * Math.sin(rad*proj.direction);
     proj.y += proj.speed * delta * Math.sin(rad*(proj.direction-90));
 }
