@@ -21,13 +21,15 @@ let units = {}
 let projectiles = [];
 let cards = {};
 let hand = [];
+let animations = {};
 
 //Define classes
 //Unit properties: moveSpeed, scale
-class Unit extends PIXI.Sprite {
+class Unit extends PIXI.AnimatedSprite {
     constructor(spriteName, props) {
         let sprite = sheet.textures[spriteName+".png"];
-        super(sprite);
+        super([sprite]);
+        this.baseSprite = spriteName;
         this.anchor.set(0.5);
         this.x = 100;
         this.y = 100;
@@ -36,6 +38,9 @@ class Unit extends PIXI.Sprite {
         this.speedX = 0;
         this.speedY = 0;
         props.moveSpeed !== undefined ? this.moveSpeed = props.moveSpeed : this.moveSpeed = 75;
+    }
+    resetAnimation() {
+        this.textures = [sheet.textures[this.baseSprite+".png"]];
     }
 }
 

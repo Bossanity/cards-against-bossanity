@@ -23,6 +23,15 @@ function createProjectile(sprite, owner, props) {
 
 function moveUnit(unit, delta) {
     let input = unit.moving;
+    let animation = animations[unit.baseSprite+"Walk"];
+    if(input.length !== 0 && animation !== undefined && !unit.playing) {
+        unit.textures = animation.arr;
+        unit.animationSpeed = animation.speed;
+        unit.play();
+    }
+    if(input.length === 0) {
+        unit.resetAnimation();
+    }
     //Perhaps this list of ifs could be done better
     //Some sort of genius solution
     if(input.includes("D")) {
@@ -56,6 +65,10 @@ function moveProjectile(proj, delta) {
     proj.rotation = rad*(proj.direction-90); //Update rotation(if it changes)
     proj.x += proj.speed * delta * Math.sin(rad*proj.direction);
     proj.y += proj.speed * delta * Math.sin(rad*(proj.direction-90));
+}
+
+function createAnimation(name, path, speed) {
+    animations[name] = {arr: path, speed: speed};
 }
 
 function bossMove(direction) {
