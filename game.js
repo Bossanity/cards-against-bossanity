@@ -8,11 +8,11 @@ function run() {
         elapsed += delta; //add time since last tick (in frames)
         let secondCount = Math.floor(elapsed / 60); // Total secondCount
         for (let i in units) {
-            //move units based on their 'moving' property
+            //units move based on their moving property
             moveUnit(units[i], delta);
         }
         for (let i in projectiles) {
-            //move projectiles based on their direction
+            //projectiles always move in their predefined direction
             moveProjectile(projectiles[i], delta);
         }
         bossAiMove();
