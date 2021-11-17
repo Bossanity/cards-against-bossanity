@@ -71,6 +71,10 @@ function createAnimation(name, path, speed) {
     animations[name] = {arr: path, speed: speed};
 }
 
+function createCard(name, displayName, effect, cost, count) {
+    cards[name] = new Card(displayName, effect, cost, count);
+}
+
 function bossMove(direction) {
     let bossMoving = units['boss'].moving;
     if(bossMoving.indexOf(direction)===-1) { //Only add keypress if it doesn't exist

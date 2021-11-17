@@ -17,12 +17,6 @@ function setup() {
 const frictionFactor = 0.85;
 const rad = Math.PI/180;
 
-let units = {}
-let projectiles = [];
-let cards = {};
-let hand = [];
-let animations = {};
-
 //Define classes
 //Unit properties: moveSpeed, scale
 class Unit extends PIXI.AnimatedSprite {
@@ -61,3 +55,58 @@ class Projectile extends PIXI.Sprite {
         this.rotation = rad*(this.direction-90);
     }
 }
+
+class Deck {
+    constructor() {
+        this.cards = [];
+    }
+
+    drawCard() {
+        let totalCount = 0;
+        this.cards.forEach(function(i) {totalCount += i.count}); //Get total amount of cards in deck
+        if(totalCount === 0 ){return}
+        let roll = Math.ceil(Math.random()*totalCount); //Roll between 1 and the total card count
+        for(let i in this.cards) {
+            let card = this.cards[i];
+            if(card.count >= roll) {
+                card.inHand += 1;
+                return card;
+            }
+            roll -= card.count; //the scuff
+        }
+    }
+
+    debugCounts() {
+        this.cards.forEach(function(i){console.log(i.displayName+": "+(i.count)+" left")});
+    }
+
+}
+
+class Card {
+    constructor(name, effect, cost, count) {
+        this.displayName = name;
+        this.effect = effect;
+        this.playedTime = -1;
+        this.cost = cost;
+        this.baseCount = count;
+        this.inHand = 0;
+    }
+
+    get count() {
+        return this.baseCount - this.inHand;
+    }
+
+    play() {
+        this.effect();
+        this.playedTime = elapsed;
+        this.inHand -= 1;
+        console.log("Played "+this.displayName);
+    }
+
+}
+
+let units = {}
+let projectiles = [];
+let animations = {};
+let cards = {};
+let deck = new Deck();
