@@ -23,6 +23,7 @@ let cards = {};
 let hand = [];
 
 //Define classes
+//Unit properties: moveSpeed, scale
 class Unit extends PIXI.Sprite {
     constructor(spriteName, props) {
         let sprite = sheet.textures[spriteName+".png"];
@@ -38,6 +39,7 @@ class Unit extends PIXI.Sprite {
     }
 }
 
+//Projectile properties: speed, scale, direction, lifespan
 class Projectile extends PIXI.Sprite {
     constructor(spriteName, owner, props) { //props will contain all properties, allowing for default values
         let sprite = sheet.textures[spriteName+".png"];

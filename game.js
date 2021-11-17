@@ -1,7 +1,7 @@
 let elapsed = 0.0; //Total frames
 function run() {
-    createUnit("dude", "boss", {moveSpeed: 20});
-    createUnit("dude", "player", {moveSpeed: 75});
+    createUnit("dude", "boss", {moveSpeed: 20, scale: 2});
+    createUnit("shooter", "player", {moveSpeed: 75});
 
     app.ticker.add((delta) => {
         elapsed += delta; //add time since last tick (in frames)
