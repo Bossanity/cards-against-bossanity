@@ -62,13 +62,30 @@ function moveProjectile(proj, delta) {
         app.stage.removeChild(proj);
         projectiles.splice(index, 1);
     }
+
+    Object.keys(proj.effects).forEach(function(i) { //activate effects
+        if(!Array.isArray(proj.effects[i])) {proj.effects[i] = [proj.effects[i]]}
+        effects[i](proj, delta/60, proj.effects[i]);
+    })
+
     proj.rotation = rad*(proj.direction-90); //Update rotation(if it changes)
-    proj.x += proj.speed * delta * Math.sin(rad*proj.direction);
-    proj.y += proj.speed * delta * Math.sin(rad*(proj.direction-90));
+    if(proj.scale.y !== proj.size) {proj.scale.set(proj.size)} //Update size(if it changes)
+    proj.movedX += proj.speed * delta * Math.sin(rad*proj.direction);
+    proj.movedY += proj.speed * delta * Math.sin(rad*(proj.direction-90));
+    if(proj.locked) {
+        proj.initX = units[proj.owner].x;
+        proj.initY = units[proj.owner].y;
+    }
+    proj.x = proj.initX + proj.movedX;
+    proj.y = proj.initY + proj.movedY;
 }
 
 function createAnimation(name, path, speed) {
     animations[name] = {arr: path, speed: speed};
+}
+
+function createCard(name, displayName, effect, cost, count, description) {
+    cards[name] = new Card(displayName, effect, cost, count, description);
 }
 
 function bossMove(direction) {
