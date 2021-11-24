@@ -8,17 +8,33 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":8},
 	"sourceSize": {"w":14,"h":8}
 },
-"dude.png":
+"boss.png":
 {
-	"frame": {"x":14,"y":0,"w":22,"h":29},
+	"frame": {"x":0,"y":96,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":22,"h":29},
-	"sourceSize": {"w":22,"h":29}
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
+	"sourceSize": {"w":60,"h":69}
+},
+"bossmove1.png":
+{
+	"frame": {"x":0,"y":165,"w":60,"h":69},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
+	"sourceSize": {"w":60,"h":69}
+},
+"bossmove2.png":
+{
+	"frame": {"x":0,"y":234,"w":60,"h":69},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
+	"sourceSize": {"w":60,"h":69}
 },
 "shooter.png":
 {
-	"frame": {"x":36,"y":0,"w":32,"h":32},
+	"frame": {"x":14,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -26,7 +42,7 @@
 },
 "shooterwalk1.png":
 {
-	"frame": {"x":68,"y":0,"w":32,"h":32},
+	"frame": {"x":0,"y":32,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -34,7 +50,7 @@
 },
 "shooterwalk2.png":
 {
-	"frame": {"x":100,"y":0,"w":32,"h":32},
+	"frame": {"x":32,"y":32,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -42,7 +58,7 @@
 },
 "shooterwalk3.png":
 {
-	"frame": {"x":132,"y":0,"w":32,"h":32},
+	"frame": {"x":0,"y":64,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -50,13 +66,14 @@
 },
 "shooterwalk4.png":
 {
-	"frame": {"x":164,"y":0,"w":32,"h":32},
+	"frame": {"x":32,"y":64,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 }},
 "animations": {
+	"bossmove": ["bossmove1.png","bossmove2.png"],
 	"shooterwalk": ["shooterwalk1.png","shooterwalk2.png","shooterwalk3.png","shooterwalk4.png"]
 },
 "meta": {
@@ -64,8 +81,8 @@
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":196,"h":32},
+	"size": {"w":64,"h":303},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d5536276996727277ed17d70b121d0fc:1489cca814590de2e7c5f4a12b58d1b3:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3fa45f7c90ac5c6c35ed015733e21fbe:02c0cbc076b814f837c01cb900c56160:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

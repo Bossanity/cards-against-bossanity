@@ -1,21 +1,36 @@
 let app = new PIXI.Application({ 
-    width: 1600, 
+    width: 1600,
     height: 900,
-    backgroundColor: 0xeeeeee
+    backgroundColor: 0xeeeeee,
+    antialias: true
     });
+
 document.body.appendChild(app.view);
 
-let sheet;
-PIXI.Loader.shared.add("assets/sprites.json").load(setup);
+PIXI.settings.ROUND_PIXELS = true; //jetbrains ur dumb sorry
 
-function setup() {
-    sheet = PIXI.Loader.shared.resources["assets/sprites.json"].spritesheet;
-    run();
-}
+app.loader.add("assets/sprites.json");
+app.loader.add("card", "assets/card.png");
+let sheet;
+app.loader.load(() => {run()});
 
 //establish constants
 const frictionFactor = 0.85;
 const rad = Math.PI/180;
+
+const cardText = new PIXI.TextStyle({
+    align: "center",
+    fontFamily: "VT323",
+    fontSize: 18
+});
+
+const cardDescText = new PIXI.TextStyle({
+    align: "center",
+    wordWrap: true,
+    wordWrapWidth: 100,
+    fontFamily: "VT323",
+    fontSize: 18
+});
 
 //Define classes
 //Unit properties: moveSpeed, scale
@@ -25,8 +40,8 @@ class Unit extends PIXI.AnimatedSprite {
         super([sprite]);
         this.baseSprite = spriteName;
         this.anchor.set(0.5);
-        this.x = 100;
-        this.y = 100;
+        this.x = app.view.width/2;
+        this.y = app.view.height/2;
         if(props.scale !== undefined) {this.scale.set(props.scale)}
         this.moving = [];
         this.speedX = 0;
@@ -45,20 +60,49 @@ class Projectile extends PIXI.Sprite {
         super(sprite);
         this.anchor.set(0.5);
         this.owner = owner;
-        this.x = units[owner].x;
-        this.y = units[owner].y;
-        if(props.scale !== undefined) {this.scale.set(props.scale)}
-        this.birth = elapsed;
+        props.locked !== undefined ? this.locked = props.locked : this.locked = false;
+        props.initX !== undefined ? this.initX = props.initX : this.initX = units[owner].x;
+        props.initY !== undefined ? this.initY = props.initY : this.initY = units[owner].y;
+        props.movedX !== undefined ? this.movedX = props.movedX : this.movedX = 0;
+        props.movedY !== undefined ? this.movedY = props.movedY : this.movedY = 0;
+        this.x = this.initX + this.movedX;
+        this.y = this.initY + this.movedY;
+        props.size !== undefined ? this.size = props.size : this.size = 1;
+        this.scale.set(this.size);
+        props.birth !== undefined ? this.birth = props.birth : this.birth = Math.round(elapsed);
         props.lifespan !== undefined ? this.lifespan = props.lifespan : this.lifespan = 60;
         props.speed !== undefined ? this.speed = props.speed : this.speed = 12;
         props.direction !== undefined ? this.direction = props.direction : this.direction = 0;
         this.rotation = rad*(this.direction-90);
+        props.effects !== undefined ? this.effects = props.effects : this.effects = {};
+        props.tracerEffects !== undefined ? this.tracerEffects = props.tracerEffects : this.tracerEffects = {};
+    }
+
+    get lived() {
+        return elapsed - this.birth;
     }
 }
 
 class Deck {
     constructor() {
         this.cards = [];
+        this.handCards = ["", "", "", "", "", ""];
+    }
+
+    get drawPileCards() {
+        let sum = 0;
+        this.cards.forEach(function(e) {sum += e.count});
+        return sum;
+    }
+
+    get handCardCount() {
+        let sum = 0;
+        this.handCards.forEach(function(e) {if(e!==""){sum++;}})
+        return sum;
+    }
+
+    get firstEmptySlot() {
+        return deck.handCards.indexOf("");
     }
 
     drawCard() {
@@ -70,10 +114,16 @@ class Deck {
             let card = this.cards[i];
             if(card.count >= roll) {
                 card.inHand += 1;
+                renderCard(card);
+                this.handCards[this.firstEmptySlot] = (card.displayName);
                 return card;
             }
-            roll -= card.count; //the scuff
+            roll -= card.count;
         }
+    }
+
+    resetDrawPile() {
+        this.cards.forEach(function(e) {e.inDiscard = 0});
     }
 
     debugCounts() {
@@ -83,23 +133,26 @@ class Deck {
 }
 
 class Card {
-    constructor(name, effect, cost, count) {
+    constructor(name, effect, cost, count, description) {
         this.displayName = name;
         this.effect = effect;
+        this.description = description;
         this.playedTime = -1;
         this.cost = cost;
         this.baseCount = count;
         this.inHand = 0;
+        this.inDiscard = 0;
     }
 
     get count() {
-        return this.baseCount - this.inHand;
+        return this.baseCount - this.inHand - this.inDiscard;
     }
 
     play() {
         this.effect();
         this.playedTime = elapsed;
         this.inHand -= 1;
+        this.inDiscard += 1;
         console.log("Played "+this.displayName);
     }
 
@@ -110,3 +163,20 @@ let projectiles = [];
 let animations = {};
 let cards = {};
 let deck = new Deck();
+let effects = {
+    accelerate: function(proj, delta, power) {proj.speed += delta*power[0]},
+    decelerate: function(proj, delta, power) {proj.speed -= delta*power[0]; if(proj.speed<0) {proj.speed = 0}},
+    rotate: function(proj, delta, power) {proj.direction += delta*power[0]},
+    grow: function(proj, delta, power) {proj.size += delta*power[0]},
+    shrink: function(proj, delta, power) {proj.size -= delta*power[0]; if(proj.size<0.01) {proj.size = 0.01}},
+    tracer: function(proj, delta, power) {
+        if(Math.round(proj.lived)%power[1]===0) { //Tracer is unique in that it uses an array of two power values, the first multiplies lifespan and speed, the second describes the frequency of tracers appearing (every nth frame)
+            createProjectile("arrow", proj.owner, {initX: proj.initX, initY: proj.initY, movedX: proj.movedX, movedY: proj.movedY, lifespan: proj.lifespan*power[0], speed: proj.speed*power[0], direction: proj.direction, x: proj.x, y: proj.y, locked: proj.locked, size: proj.size, effects: proj.tracerEffects})
+        }
+    },
+    tracerSync: function(proj, delta, power) {
+        if(Math.round(proj.lived)%power[1]===0) {
+            createProjectile("arrow", proj.owner, {initX: proj.initX, initY: proj.initY, movedX: proj.movedX, movedY: proj.movedY, birth: proj.birth, lifespan: proj.lifespan, speed: proj.speed*power[0], direction: proj.direction, x: proj.x, y: proj.y, locked: proj.locked, size: proj.size, effects: proj.tracerEffects})
+        }
+    }
+};

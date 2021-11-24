@@ -25,7 +25,10 @@ document.addEventListener('keydown', function(key) {
                 direction = 270;
                 break;
         }
-        createProjectile("arrow", "player", {direction: direction});
+        if(elapsed>lastShootingTime+12) {
+            createProjectile("arrow", "player", {direction: direction});
+            lastShootingTime = elapsed;
+        }
     }
 })
 
