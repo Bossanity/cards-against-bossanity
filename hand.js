@@ -17,9 +17,13 @@ function renderCard(card) {
     let descriptionText = new PIXI.Text(card.description, cardDescText);
     descriptionText.x = sprite.width / 2 - descriptionText.width / 2;
     descriptionText.y = 36;
+    let costText = new PIXI.Text("Cost: "+card.cost, cardDescText);
+    costText.x = sprite.width / 2 - costText.width / 2;
+    costText.y = 175;
     sprite.interactive = true;
     sprite.on('pointerdown', function(){card.play();deck.handCards[(Math.round(this.x/120))] = ""; this.destroy()});
     sprite.addChild(nameText);
     sprite.addChild(descriptionText);
+    sprite.addChild(costText);
     handDiv.addChild(sprite);
 }

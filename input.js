@@ -1,41 +1,44 @@
 document.addEventListener('keydown', function(key) {
-    let movements = ['KeyW', 'KeyA', 'KeyS', 'KeyD'];
-    let shoots = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    if(movements.includes(key.code)) {
-        let input = key.code.slice(3,4); //'W', 'A', 'S', 'D'
-        if(units['player'].moving.indexOf(input)===-1) { //Only add keypress if it doesn't exist
-            units['player'].moving.push(input);
-        }
-        return;
-    }
-    if(shoots.includes(key.code)) {
-        let input = key.code.slice(5,10); //'Left', 'Right', 'Up', 'Down'
-        let direction;
-        switch(input) {
-            case "Up":
-                direction = 0;
-                break;
-            case "Right":
-                direction = 90;
-                break;
-            case "Down":
-                direction = 180;
-                break;
-            case "Left":
-                direction = 270;
-                break;
-        }
-        if(elapsed>lastShootingTime+12) {
-            createProjectile("arrow", "player", {direction: direction});
-            lastShootingTime = elapsed;
-        }
+    if(!keysDown.includes(key.code)) {
+        keysDown.push(key.code)
     }
 })
 
 document.addEventListener('keyup', function(key) {
-    let movements = ['KeyW', 'KeyA', 'KeyS', 'KeyD'];
-    if(movements.includes(key.code)) {
-        let input = key.code.slice(3,4);
-        units['player'].moving.remove(input); //remove keypress from moving array
-    }
+    keysDown.remove(key.code)
 })
+
+function handleInput() {
+    let moveKeys = ["KeyW", "KeyA", "KeyS", "KeyD"];
+    let movesInputted = ""; //becomes WASD depending on what buttons are pressed, always in that order
+    moveKeys.forEach(function(e) {if(keysDown.includes(e)) {movesInputted += e.slice(3,4)}});
+    if(movesInputted !== "") {
+        let map = {"W": 0, "D": 90, "S": 180, "A": 270, "WD": 45, "SD": 135, "AS": 225, "WA": 315};
+        let direction = 0;
+        Object.keys(map).forEach(function (e) {
+            if (movesInputted.indexOf(e) !== -1) {
+                direction = map[e];
+            }
+        })
+        units['player'].direction = direction;
+        units['player'].moving = true;
+    } else {
+        units['player'].moving = false;
+    }
+    let shootKeys = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
+    let shootsInputted = "";
+    shootKeys.forEach(function(e) {if(keysDown.includes(e)) {shootsInputted += e.slice(5)}});
+    if(shootsInputted !== "") {
+        let map = {"Up": 0, "Right": 90, "Down": 180, "Left": 270};
+        let direction = 0;
+        Object.keys(map).forEach(function(e) {
+            if(shootsInputted.indexOf(e) !== -1) {
+                direction = map[e];
+            }
+        })
+        if(timers.playerShoot+12<elapsed) {
+            createProjectile("arrow", "player", {direction: direction});
+            timers.playerShoot = elapsed;
+        }
+    }
+}

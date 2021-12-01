@@ -43,7 +43,9 @@ class Unit extends PIXI.AnimatedSprite {
         this.x = app.view.width/2;
         this.y = app.view.height/2;
         if(props.scale !== undefined) {this.scale.set(props.scale)}
-        this.moving = [];
+        this.direction = 0;
+        this.moving = false;
+        if(props.controlled !== undefined) {this.inputs = []}
         this.speedX = 0;
         this.speedY = 0;
         props.moveSpeed !== undefined ? this.moveSpeed = props.moveSpeed : this.moveSpeed = 75;
@@ -162,6 +164,8 @@ let units = {}
 let projectiles = [];
 let animations = {};
 let cards = {};
+let keysDown = [];
+let timers = {playerShoot: 0, cardDraw: 0};
 let deck = new Deck();
 let effects = {
     accelerate: function(proj, delta, power) {proj.speed += delta*power[0]},
