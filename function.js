@@ -61,7 +61,6 @@ function moveProjectile(proj, delta) {
     })
 
     proj.rotation = rad*(proj.direction-90); //Update rotation(if it changes)
-    if(proj.scale.y !== proj.size) {proj.scale.set(proj.size)} //Update size(if it changes)
     proj.movedX += proj.speed * delta * Math.sin(rad*proj.direction);
     proj.movedY += proj.speed * delta * Math.sin(rad*(proj.direction-90));
     if(proj.locked) {
@@ -80,14 +79,61 @@ function createCard(name, displayName, effect, cost, count, description) {
     cards[name] = new Card(displayName, effect, cost, count, description);
 }
 
-function bossAiMove() {
-    let xDistance = units['player'].x - units['boss'].x;
-    let yDistance = units['player'].y - units['boss'].y;
-    let realDistance = Math.sqrt(xDistance**2 + yDistance**2);
-    if(realDistance>5) {
-        units['boss'].direction = Math.atan2(yDistance, xDistance) / rad + 90;
-        units['boss'].moving = true;
+function getPlayerDirection(unit) {
+    let xDiff, yDiff;
+    if(unit.constructor.name === "Projectile") {
+        xDiff = units['player'].x - unit.x;
+        yDiff = units['player'].y - unit.y;
     } else {
-        units['boss'].moving = false;
+        xDiff = units['player'].x - units[unit].x;
+        yDiff = units['player'].y - units[unit].y;
     }
+    let diff = Math.atan2(yDiff, xDiff) / rad + 90;
+    if(diff<0) {diff += 360}
+    return diff;
+}
+
+function aiMove(unit) {
+    let realDistance = Math.sqrt((units['player'].y - units[unit].y)**2 + (units['player'].x - units[unit].x)**2);
+    if(realDistance>5) {
+        units[unit].direction = getPlayerDirection(unit);
+        units[unit].moving = true;
+    } else {
+        units[unit].moving = false;
+    }
+}
+
+function collideDamage(unit) { //Checks for collisions between the a unit and all other units, deal damage if so
+    let unitObj = units[unit];
+    Object.keys(units).forEach(function(e){
+        if(b.hit(unitObj, units[e]) && e !== unit && unitObj.lastHit+unitObj.invTime<elapsed) {
+            unitObj.lastHit = elapsed;
+            unitObj.takeDamage(units[e].damage);
+            flashDamage(unit, unitObj.invTime);
+        }
+    })
+}
+
+function projectileDamage(proj) {
+    Object.keys(units).forEach(function(e) {
+        if(b.hit(proj, units[e]) && proj.owner !== e && units[e].lastHit+units[e].invTime<elapsed) {
+            units[e].lastHit = elapsed;
+            units[e].takeDamage(proj.damage);
+            flashDamage(e, units[e].invTime);
+            proj.lifespan = 0;
+        }
+    })
+}
+
+function flashDamage(unit, time) {
+    let unitObj = units[unit];
+    let num = 0; //15 is no tint, 0 is full tint
+    let redDecay = setInterval(function(){
+        if(num>=15) {
+            unitObj.tint = 0xffffff; clearInterval(redDecay) //Clear itself once the flash is over
+        } else {
+            unitObj.tint = "0xff" + (num).toString(16).repeat(4);
+        }
+        num += 1;
+    }, time*(1000/60)/16)
 }
