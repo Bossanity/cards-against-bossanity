@@ -1,13 +1,11 @@
 let elapsed = 0; //Total frames
-let lastShootingTime = 0;
-let lastDrewTime = 0;
 function run() {
     sheet = app.loader.resources["assets/sprites.json"].spritesheet;
     createAnimation("shooterWalk", sheet.animations['shooterwalk'], 0.15);
     createAnimation("bossWalk", sheet.animations['bossmove'], 0.07);
 
-    createUnit("boss", "boss", {moveSpeed: 20});
-    createUnit("shooter", "player", {moveSpeed: 75});
+    createUnit("boss", "boss", {moveSpeed: 25});
+    createUnit("shooter", "player", {moveSpeed: 75, controlled: true});
 
     createCard("fireShield", "Fire Shield", function(){
         for(let i = 0; i<6; i++) {
@@ -67,9 +65,10 @@ function run() {
             //projectiles always move in their predefined direction
             moveProjectile(i, delta);
         })
+        handleInput();
         bossAiMove();
-        if(deck.handCardCount<6 && lastDrewTime+360<elapsed) {deck.drawCard(); lastDrewTime = elapsed}
-        debug1.text = "Time to next card: "+Math.round((lastDrewTime+360-elapsed)/6)/10+"s";
+        if(deck.handCardCount<6 && timers.cardDraw+360<elapsed && deck.drawPileCards !== 0) {deck.drawCard(); timers.cardDraw = elapsed}
+        debug1.text = "Time to next card: "+Math.round(Math.max(timers.cardDraw+360-elapsed, 0)/6)/10+"s";
         debug2.text = "Cards in draw pile: "+deck.drawPileCards;
     });
 }

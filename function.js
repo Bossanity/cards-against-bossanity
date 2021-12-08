@@ -22,31 +22,23 @@ function createProjectile(sprite, owner, props) {
 }
 
 function moveUnit(unit, delta) {
-    let input = unit.moving;
     let animation = animations[unit.baseSprite+"Walk"];
-    if(input.length !== 0 && animation !== undefined && !unit.playing) {
+    if(unit.moving && animation !== undefined && !unit.playing) {
         unit.textures = animation.arr;
         unit.animationSpeed = animation.speed;
         unit.play();
     }
-    if(input.length === 0) {
+    if(!unit.moving) {
         unit.resetAnimation();
     }
-    //Perhaps this list of ifs could be done better
-    //Some sort of genius solution
-    if(input.includes("D")) {
-        unit.speedX+=1;
-        unit.scale.x = Math.abs(unit.scale.x); //Face right
+    if(Math.sin(rad*unit.direction)<0) { //negative values mean unit is going left
+        unit.scale.x = Math.abs(unit.scale.x)*-1; //flip left
+    } else {
+        unit.scale.x = Math.abs(unit.scale.x); //flip right
     }
-    if(input.includes("S")) {
-        unit.speedY+=1;
-    }
-    if(input.includes("A")) {
-        unit.speedX-=1;
-        unit.scale.x = Math.abs(unit.scale.x)*-1; //Face left
-    }
-    if(input.includes("W")) {
-        unit.speedY-=1;
+    if(unit.moving) {
+        unit.speedX += Math.sin(rad * unit.direction);
+        unit.speedY += Math.sin(rad * (unit.direction - 90));
     }
     unit.speedX *= frictionFactor;
     unit.speedY *= frictionFactor;
@@ -88,43 +80,14 @@ function createCard(name, displayName, effect, cost, count, description) {
     cards[name] = new Card(displayName, effect, cost, count, description);
 }
 
-function bossMove(direction) {
-    let bossMoving = units['boss'].moving;
-    if(bossMoving.indexOf(direction)===-1) { //Only add keypress if it doesn't exist
-        //hiring big brains to make this a better function
-        switch(direction) {
-            case "W":
-                bossMoving.remove("S");
-                bossMoving.push("W");
-                return;
-            case "S":
-                bossMoving.remove("W");
-                bossMoving.push("S");
-                return;
-            case "A":
-                bossMoving.remove("D");
-                bossMoving.push("A");
-                return;
-            case "D":
-                bossMoving.remove("A");
-                bossMoving.push("D");
-                return;
-        }
-    }
-}
-
 function bossAiMove() {
     let xDistance = units['player'].x - units['boss'].x;
     let yDistance = units['player'].y - units['boss'].y;
-    
-    if(xDistance>0) { //if the player is to the right
-        bossMove("D");
+    let realDistance = Math.sqrt(xDistance**2 + yDistance**2);
+    if(realDistance>5) {
+        units['boss'].direction = Math.atan2(yDistance, xDistance) / rad + 90;
+        units['boss'].moving = true;
     } else {
-        bossMove("A")
-    }
-    if(yDistance>0) { //if the player is below (remember positive Y is down)
-        bossMove("S");
-    } else {
-        bossMove("W");
+        units['boss'].moving = false;
     }
 }

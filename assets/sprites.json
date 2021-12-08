@@ -32,6 +32,14 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
 	"sourceSize": {"w":60,"h":69}
 },
+"bossmove3.png":
+{
+	"frame": {"x":0,"y":303,"w":60,"h":69},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
+	"sourceSize": {"w":60,"h":69}
+},
 "shooter.png":
 {
 	"frame": {"x":14,"y":0,"w":32,"h":32},
@@ -73,7 +81,7 @@
 	"sourceSize": {"w":32,"h":32}
 }},
 "animations": {
-	"bossmove": ["bossmove1.png","bossmove2.png"],
+	"bossmove": ["bossmove1.png","bossmove2.png","bossmove3.png"],
 	"shooterwalk": ["shooterwalk1.png","shooterwalk2.png","shooterwalk3.png","shooterwalk4.png"]
 },
 "meta": {
@@ -81,8 +89,8 @@
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":64,"h":303},
+	"size": {"w":64,"h":372},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:3fa45f7c90ac5c6c35ed015733e21fbe:02c0cbc076b814f837c01cb900c56160:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:b8a757da06be237885512cd160e7d3ab:fb6d2db22b0e64ed49d8ccc606fad81a:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }
