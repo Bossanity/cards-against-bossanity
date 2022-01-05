@@ -8,7 +8,8 @@ const b = new Bump();
 
 document.body.appendChild(app.view);
 
-PIXI.settings.ROUND_PIXELS = true; //jetbrains ur dumb sorry
+// noinspection JSConstantReassignment
+PIXI.settings.ROUND_PIXELS = true;
 
 app.loader.add("assets/sprites.json");
 app.loader.add("card", "assets/card.png");
@@ -27,10 +28,10 @@ const cardText = new PIXI.TextStyle({
 
 const cardDescText = new PIXI.TextStyle({
     align: "center",
-    wordWrap: true,
-    wordWrapWidth: 100,
     fontFamily: "VT323",
-    fontSize: 18
+    fontSize: 18,
+    wordWrap: true,
+    wordWrapWidth: 100
 });
 
 //Define classes
@@ -149,6 +150,7 @@ class Deck {
 
     resetDrawPile() {
         this.cards.forEach(function(e) {e.inDiscard = 0});
+        console.log("Reset draw pile")
     }
 
     debugCounts() {
@@ -178,7 +180,6 @@ class Card {
         this.playedTime = elapsed;
         this.inHand -= 1;
         this.inDiscard += 1;
-        console.log("Played "+this.displayName);
     }
 
 }
@@ -189,7 +190,7 @@ let animations = {};
 let cards = {};
 let keysDown = [];
 let timers = {playerShoot: 0, cardDraw: 0};
-let timersLength = {playerShoot: 12, cardDraw: 150};
+let timersLength = {playerShoot: 12, cardDraw: 15};
 const tileSize = 25;
 const tileThresholds = [0.5, -0.5, 0.3, -0.1] //chances: 10%, 20%, 30%, 40% source: trust me bro
 let deck = new Deck();

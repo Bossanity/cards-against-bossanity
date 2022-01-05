@@ -12,19 +12,19 @@ function run() {
     createUnit("shooter", "player", {moveSpeed: 70, maxHp: 150, invTime: 40, x: app.view.width-100});
 
     createCard("fireShield", "Fire Shield", function(){
-        for(let i = 0; i<6; i++) {
+        for(let i = 0; i<12; i++) {
             createProjectile("energyball", "boss", {
                 locked: true,
-                speed: 7.5,
-                direction: i*60,
+                speed: 10,
+                direction: i*30,
                 lifespan: 300,
                 effects: {turn: 720}
             })}
-        for(let i = 0; i<6; i++) {
+        for(let i = 0; i<12; i++) {
             createProjectile("energyball", "boss", {
                 locked: true,
-                speed: 7.5,
-                direction: i*60,
+                speed: 10,
+                direction: i*30,
                 lifespan: 300,
                 effects: {turn: -720}
             })}
@@ -97,7 +97,14 @@ function run() {
         })
         handleInput();
         collideDamage("player"); //Check for collision with other units
-        if(deck.handCardCount<6 && timers.cardDraw+timersLength.cardDraw<elapsed && deck.drawPileCards !== 0) {deck.drawCard(); timers.cardDraw = elapsed}
+        if(deck.handCardCount === 0 && deck.drawPileCards === 0) {
+            deck.resetDrawPile();
+            timers.cardDraw = elapsed;
+        }
+        if(deck.handCardCount<6 && timers.cardDraw+timersLength.cardDraw<elapsed && deck.drawPileCards !== 0) {
+            deck.drawCard();
+            timers.cardDraw = elapsed;
+        }
         debug1.text = "Boss health: "+units['boss'].hp + " / " + units['boss'].maxHp;
         debug2.text = "Player health: "+units['player'].hp + " / " + units['player'].maxHp;
     });

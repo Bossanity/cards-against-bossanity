@@ -42,9 +42,13 @@ function moveUnit(unit, delta) {
     }
     unit.speedX *= frictionFactor;
     unit.speedY *= frictionFactor;
+    let goX = unit.speedX * delta/60 * unit.moveSpeed;
+    let goY = unit.speedY * delta/60 * unit.moveSpeed;
     //speedX and speedY effectively act as acceleration
-    unit.x += unit.speedX * delta/60 * unit.moveSpeed;
-    unit.y += unit.speedY * delta/60 * unit.moveSpeed;
+    unit.x += goX;
+    unit.y += goY;
+    unit.x = Math.min(Math.max(unit.x, unit.width/2), app.view.width - unit.width/2);
+    unit.y = Math.min(Math.max(unit.y, unit.height/2), app.view.height - unit.height/2);
 }
 
 function moveProjectile(proj, delta) {
@@ -89,12 +93,12 @@ function deleteUnit(unit) {
     unit.moving = false;
     unit.moveSpeed = 0;
     unit.ai = false;
-    unit.lastHit = 1e12; //uhh yeah technically if you hold the game open for 528.5 years this will break
+    unit.lastHit = Infinity;
     app.stage.removeChild(unit);
 }
 
 function drawTiles() {
-    const tileCount = [app.view.width/tileSize, app.view.height/tileSize] //horizontally and vertically, amount of tiles to draw
+    const tileCount = [Math.ceil(app.view.width/tileSize), Math.ceil(app.view.height/tileSize)]; //horizontally and vertically, amount of tiles to draw
     for(let i=0; i<tileCount[0]; i++) {
         for(let j=0; j<tileCount[1]; j++) {
             let value = perlin.get(i/tileCount[0], j/tileCount[1]); //get perlin noise value (usually doesn't exceed -0.5 or 0.5)
