@@ -1,16 +1,19 @@
 let elapsed = 0; //Total frames
 function run() {
     sheet = app.loader.resources["assets/sprites.json"].spritesheet;
+
+    drawTiles();
+
     createAnimation("energyballAnim", sheet.animations['energyballanim'], 0.2);
     createAnimation("shooterWalk", sheet.animations['shooterwalk'], 0.15);
     createAnimation("bossWalk", sheet.animations['bossmove'], 0.07);
 
-    createUnit("boss", "boss", {moveSpeed: 25, invTime: 10, maxHp: 2500, ai: false, x: 100});
-    createUnit("shooter", "player", {moveSpeed: 70, maxHp: 15000, invTime: 40, x: app.view.width-100});
+    createUnit("boss", "boss", {moveSpeed: 25, invTime: 10, maxHp: 2500, ai: true, x: 100});
+    createUnit("shooter", "player", {moveSpeed: 70, maxHp: 150, invTime: 40, x: app.view.width-100});
 
     createCard("fireShield", "Fire Shield", function(){
         for(let i = 0; i<6; i++) {
-            createProjectile("arrow", "boss", {
+            createProjectile("energyball", "boss", {
                 locked: true,
                 speed: 7.5,
                 direction: i*60,
@@ -18,14 +21,14 @@ function run() {
                 effects: {turn: 720}
             })}
         for(let i = 0; i<6; i++) {
-            createProjectile("arrow", "boss", {
+            createProjectile("energyball", "boss", {
                 locked: true,
                 speed: 7.5,
                 direction: i*60,
                 lifespan: 300,
                 effects: {turn: -720}
             })}
-    }, 100, 5, "Fire shields the boss's butt");
+    }, 100, 5, "Gives the boss a fire shield");
     createCard("whirlwind", "Whirlwind", function(){
         for(let i = 0; i<9; i++) {
             createProjectile("arrow", "boss", {
@@ -44,7 +47,7 @@ function run() {
                 lifespan: 30,
                 effects: {decelerate: 64, turn: 480}
             })}
-    }, 100, 4, "Novas ur ass LMAOOO");
+    }, 100, 4, "Throws out a quickie");
     createCard("curtain", "Curtain", function(){
         for(let i=0; i<20; i++) {
             createProjectile("arrow", "boss", {

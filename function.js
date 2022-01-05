@@ -85,6 +85,34 @@ function createCard(name, displayName, effect, cost, count, description) {
     cards[name] = new Card(displayName, effect, cost, count, description);
 }
 
+function deleteUnit(unit) {
+    unit.moving = false;
+    unit.moveSpeed = 0;
+    unit.ai = false;
+    unit.lastHit = 1e12; //uhh yeah technically if you hold the game open for 528.5 years this will break
+    app.stage.removeChild(unit);
+}
+
+function drawTiles() {
+    const tileCount = [app.view.width/tileSize, app.view.height/tileSize] //horizontally and vertically, amount of tiles to draw
+    for(let i=0; i<tileCount[0]; i++) {
+        for(let j=0; j<tileCount[1]; j++) {
+            let value = perlin.get(i/tileCount[0], j/tileCount[1]); //get perlin noise value (usually doesn't exceed -0.5 or 0.5)
+            let closest = 9999;
+            for(let i in tileThresholds) {
+                if(Math.abs(value - tileThresholds[i]) < Math.abs(value - closest)) {
+                    closest = tileThresholds[i]; //determine tile based on what threshold is closest to the value
+                }
+            }
+            let tileNumber = tileThresholds.indexOf(closest)+1;
+            let tile = new PIXI.Sprite(sheet.textures['tile0'+tileNumber+'.png']);
+            tile.x = i * tileSize;
+            tile.y = j * tileSize;
+            app.stage.addChild(tile);
+        }
+    }
+}
+
 function getPlayerDirection(unit) {
     let xDiff, yDiff;
     if(unit.constructor.name === "Projectile") {

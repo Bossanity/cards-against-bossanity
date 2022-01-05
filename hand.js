@@ -1,6 +1,6 @@
 let handDiv = new PIXI.Graphics();
 function initHand() {
-    handDiv.lineStyle(1, 0x000000);
+    handDiv.lineStyle(0, 0x000000);
     handDiv.drawRect(0, 0, 720, 200);
     handDiv.x = app.view.width / 2 - handDiv.width / 2;
     handDiv.y = app.view.height-200;

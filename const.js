@@ -62,9 +62,7 @@ class Unit extends PIXI.AnimatedSprite {
     takeDamage(amount) {
         this.hp -= amount;
         if(this.hp<=0) {
-            this.moving = false;
-            this.moveSpeed = 0;
-            this.ai = false;
+            deleteUnit(this);
         }
     }
 }
@@ -192,6 +190,8 @@ let cards = {};
 let keysDown = [];
 let timers = {playerShoot: 0, cardDraw: 0};
 let timersLength = {playerShoot: 12, cardDraw: 150};
+const tileSize = 25;
+const tileThresholds = [0.5, -0.5, 0.3, -0.1] //chances: 10%, 20%, 30%, 40% source: trust me bro
 let deck = new Deck();
 let effects = {
     accelerate: function(proj, delta, power) {proj.speed += delta*power[0]},
