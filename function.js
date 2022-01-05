@@ -48,6 +48,12 @@ function moveUnit(unit, delta) {
 }
 
 function moveProjectile(proj, delta) {
+    let animation = animations[proj.baseSprite+"Anim"];
+    if(animation !== undefined && !proj.playing) {
+        proj.textures = animation.arr;
+        proj.animationSpeed = animation.speed;
+        proj.play();
+    }
     //proj.direction being the predefined direction in degrees
     if(elapsed>proj.birth+proj.lifespan) {
         let index = projectiles.indexOf(proj);

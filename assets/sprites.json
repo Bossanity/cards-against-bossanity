@@ -10,7 +10,7 @@
 },
 "boss.png":
 {
-	"frame": {"x":0,"y":96,"w":60,"h":69},
+	"frame": {"x":0,"y":162,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
@@ -18,7 +18,7 @@
 },
 "bossmove1.png":
 {
-	"frame": {"x":0,"y":165,"w":60,"h":69},
+	"frame": {"x":0,"y":231,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
@@ -26,7 +26,7 @@
 },
 "bossmove2.png":
 {
-	"frame": {"x":0,"y":234,"w":60,"h":69},
+	"frame": {"x":0,"y":300,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
@@ -34,15 +34,55 @@
 },
 "bossmove3.png":
 {
-	"frame": {"x":0,"y":303,"w":60,"h":69},
+	"frame": {"x":0,"y":369,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
 	"sourceSize": {"w":60,"h":69}
 },
+"energyball.png":
+{
+	"frame": {"x":14,"y":0,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
+},
+"energyballanim1.png":
+{
+	"frame": {"x":30,"y":0,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
+},
+"energyballanim2.png":
+{
+	"frame": {"x":46,"y":0,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
+},
+"energyballanim3.png":
+{
+	"frame": {"x":0,"y":16,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
+},
+"energyballanim4.png":
+{
+	"frame": {"x":16,"y":16,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
+},
 "shooter.png":
 {
-	"frame": {"x":14,"y":0,"w":32,"h":32},
+	"frame": {"x":25,"y":66,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -50,7 +90,7 @@
 },
 "shooterwalk1.png":
 {
-	"frame": {"x":0,"y":32,"w":32,"h":32},
+	"frame": {"x":0,"y":98,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -58,7 +98,7 @@
 },
 "shooterwalk2.png":
 {
-	"frame": {"x":32,"y":32,"w":32,"h":32},
+	"frame": {"x":32,"y":98,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -66,7 +106,7 @@
 },
 "shooterwalk3.png":
 {
-	"frame": {"x":0,"y":64,"w":32,"h":32},
+	"frame": {"x":0,"y":130,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -74,23 +114,57 @@
 },
 "shooterwalk4.png":
 {
-	"frame": {"x":32,"y":64,"w":32,"h":32},
+	"frame": {"x":32,"y":130,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
+},
+"tile01.png":
+{
+	"frame": {"x":32,"y":16,"w":25,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":25,"h":25},
+	"sourceSize": {"w":25,"h":25}
+},
+"tile02.png":
+{
+	"frame": {"x":0,"y":41,"w":25,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":25,"h":25},
+	"sourceSize": {"w":25,"h":25}
+},
+"tile03.png":
+{
+	"frame": {"x":25,"y":41,"w":25,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":25,"h":25},
+	"sourceSize": {"w":25,"h":25}
+},
+"tile04.png":
+{
+	"frame": {"x":0,"y":66,"w":25,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":25,"h":25},
+	"sourceSize": {"w":25,"h":25}
 }},
 "animations": {
 	"bossmove": ["bossmove1.png","bossmove2.png","bossmove3.png"],
-	"shooterwalk": ["shooterwalk1.png","shooterwalk2.png","shooterwalk3.png","shooterwalk4.png"]
+	"energyballanim": ["energyballanim1.png","energyballanim2.png","energyballanim3.png","energyballanim4.png"],
+	"shooterwalk": ["shooterwalk1.png","shooterwalk2.png","shooterwalk3.png","shooterwalk4.png"],
+	"tile": ["tile01.png","tile02.png","tile03.png","tile04.png"]
 },
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":64,"h":372},
+	"size": {"w":64,"h":438},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:b8a757da06be237885512cd160e7d3ab:fb6d2db22b0e64ed49d8ccc606fad81a:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:7fb36bc3448eac88419754233e8cf591:1b2593e3ec4cec984cd0d0c606d5519b:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

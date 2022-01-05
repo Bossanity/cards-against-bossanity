@@ -70,10 +70,11 @@ class Unit extends PIXI.AnimatedSprite {
 }
 
 //Projectile properties: speed, scale, direction, lifespan
-class Projectile extends PIXI.Sprite {
+class Projectile extends PIXI.AnimatedSprite {
     constructor(spriteName, owner, props) { //props will contain all properties, allowing for default values
         let sprite = sheet.textures[spriteName+".png"];
-        super(sprite);
+        super([sprite]);
+        this.baseSprite = spriteName;
         this.anchor.set(0.5);
         this.owner = owner;
         props.locked !== undefined ? this.locked = props.locked : this.locked = false;
@@ -141,7 +142,7 @@ class Deck {
             if(card.count >= roll) {
                 card.inHand += 1;
                 renderCard(card);
-                this.handCards[this.firstEmptySlot] = (card.displayName);
+                this.handCards[this.firstEmptySlot] = card.displayName;
                 return card;
             }
             roll -= card.count;

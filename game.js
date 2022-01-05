@@ -1,6 +1,7 @@
 let elapsed = 0; //Total frames
 function run() {
     sheet = app.loader.resources["assets/sprites.json"].spritesheet;
+    createAnimation("energyballAnim", sheet.animations['energyballanim'], 0.2);
     createAnimation("shooterWalk", sheet.animations['shooterwalk'], 0.15);
     createAnimation("bossWalk", sheet.animations['bossmove'], 0.07);
 
@@ -38,10 +39,10 @@ function run() {
     createCard("nova", "Nova", function(){
         for(let i = 0; i<90; i++) {
             createProjectile("arrow", "boss", {
-                speed: 6,
+                speed: 24,
                 direction: i*4,
-                lifespan: 80,
-                effects: {decelerate: 4, turn: 120}
+                lifespan: 30,
+                effects: {decelerate: 64, turn: 480}
             })}
     }, 100, 4, "Novas ur ass LMAOOO");
     createCard("curtain", "Curtain", function(){
@@ -80,19 +81,19 @@ function run() {
     app.ticker.add((delta) => {
         elapsed += delta; //add time since last tick (in frames)
         for (let i in units) {
-            //units move based on their moving property
+            //units move based on their direction and speed
             moveUnit(units[i], delta);
-            if(units[i].ai) {
+            if(units[i].ai) { //Units with ai:true will automatically pursue the player.
                 aiMove(i);
             }
         }
         projectiles.forEach(function(i) {
-            //projectiles always move in their predefined direction
+            //projectiles move based on their direction and speed
             moveProjectile(i, delta);
-            projectileDamage(i);
+            projectileDamage(i); //if the projectile hits a non-owner unit, deal damage and disappear
         })
         handleInput();
-        collideDamage("player");
+        collideDamage("player"); //Check for collision with other units
         if(deck.handCardCount<6 && timers.cardDraw+timersLength.cardDraw<elapsed && deck.drawPileCards !== 0) {deck.drawCard(); timers.cardDraw = elapsed}
         debug1.text = "Boss health: "+units['boss'].hp + " / " + units['boss'].maxHp;
         debug2.text = "Player health: "+units['player'].hp + " / " + units['player'].maxHp;
