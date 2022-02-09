@@ -11,6 +11,7 @@ function initHand() {
 function renderCard(card) {
     let sprite = new PIXI.Sprite(app.loader.resources["card"].texture);
     sprite.x = 120 * (deck.firstEmptySlot);
+    sprite.alpha = 0.9;
     let nameText = new PIXI.Text(card.displayName, cardText);
     nameText.x = sprite.width / 2 - nameText.width / 2;
     nameText.y = 12;

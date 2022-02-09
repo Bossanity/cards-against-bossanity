@@ -8,17 +8,11 @@ Array.prototype.remove = function() {
         }
     }
     return this;
-};
+}
 
 function createUnit(spriteName, name, props) {
     units[name] = new Unit(spriteName, props);
     app.stage.addChild(units[name]);
-}
-
-function createProjectile(sprite, owner, props) {
-    // function to create projectile, store it in list and also get it onto the screen
-    let proj = projectiles.push(new Projectile(sprite, owner, props));
-    app.stage.addChild(projectiles[proj-1]);
 }
 
 function moveUnit(unit, delta) {
@@ -51,6 +45,20 @@ function moveUnit(unit, delta) {
     unit.y = Math.min(Math.max(unit.y, unit.height/2), app.view.height - unit.height/2);
 }
 
+function deleteUnit(unit) {
+    unit.moving = false;
+    unit.moveSpeed = 0;
+    unit.ai = false;
+    unit.lastHit = Infinity;
+    app.stage.removeChild(unit);
+}
+
+function createProjectile(sprite, owner, props) {
+    // function to create projectile, store it in list and also get it onto the screen
+    let proj = projectiles.push(new Projectile(sprite, owner, props));
+    app.stage.addChild(projectiles[proj-1]);
+}
+
 function moveProjectile(proj, delta) {
     let animation = animations[proj.baseSprite+"Anim"];
     if(animation !== undefined && !proj.playing) {
@@ -60,9 +68,8 @@ function moveProjectile(proj, delta) {
     }
     //proj.direction being the predefined direction in degrees
     if(elapsed>proj.birth+proj.lifespan) {
-        let index = projectiles.indexOf(proj);
-        app.stage.removeChild(proj);
-        projectiles.splice(index, 1);
+        deleteProjectile(proj)
+        return
     }
 
     Object.keys(proj.effects).forEach(function(i) { //activate effects
@@ -81,6 +88,12 @@ function moveProjectile(proj, delta) {
     proj.y = proj.initY + proj.movedY;
 }
 
+function deleteProjectile(proj) {
+    let index = projectiles.indexOf(proj);
+    app.stage.removeChild(proj);
+    projectiles.splice(index, 1);
+}
+
 function createAnimation(name, path, speed) {
     animations[name] = {arr: path, speed: speed};
 }
@@ -89,12 +102,10 @@ function createCard(name, displayName, effect, cost, count, description) {
     cards[name] = new Card(displayName, effect, cost, count, description);
 }
 
-function deleteUnit(unit) {
-    unit.moving = false;
-    unit.moveSpeed = 0;
-    unit.ai = false;
-    unit.lastHit = Infinity;
-    app.stage.removeChild(unit);
+function createObstacle(sprite, props) {
+    let obstacle = new Obstacle(sprite, props);
+    app.stage.addChild(obstacle);
+    obstacles.push(obstacle);
 }
 
 function drawTiles() {
@@ -174,4 +185,28 @@ function flashDamage(unit, time) {
         }
         num += 1;
     }, time*(1000/60)/16)
+}
+
+function checkObstacles(delta) {
+    obstacles.forEach(function(e) {
+        Object.keys(units).forEach(function(unit) {
+            unit = units[unit]; //fuckery to make object.forEach work
+            if(b.hit(e, unit)) {
+                for(let i in e.effects) {
+                    if(i.indexOf("unit")!==-1) {
+                        obstacleEffects[i](e, unit, delta, e.effects[i]);
+                    }
+                }
+            }
+        })
+        projectiles.forEach(function (proj) {
+            if(b.hit(e, proj)) {
+                for(let i in e.effects) {
+                    if(i.indexOf("proj")!==-1) {
+                        obstacleEffects[i](e, proj, delta, e.effects[i]);
+                    }
+                }
+            }
+        })
+    })
 }

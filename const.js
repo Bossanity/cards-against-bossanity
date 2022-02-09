@@ -1,6 +1,6 @@
 let app = new PIXI.Application({ 
-    width: 1600,
-    height: 900,
+    width: window.innerWidth,
+    height: window.innerHeight,
     backgroundColor: 0xeeeeee,
     antialias: true
     });
@@ -184,13 +184,28 @@ class Card {
 
 }
 
+class Obstacle extends PIXI.AnimatedSprite {
+    constructor(spriteName, props) {
+        let sprite = sheet.textures[spriteName+".png"];
+        super([sprite]);
+        this.baseSprite = spriteName;
+        this.anchor.set(0.5);
+        props.x !== undefined ? this.x = props.x : this.x = app.view.width*Math.random();
+        props.y !== undefined ? this.y = props.y : this.y = app.view.height*Math.random();
+        props.effects !== undefined ? this.effects = props.effects : this.effects = {};
+        if(props.opacity !== undefined) {this.alpha = props.opacity}
+        if(props.scale !== undefined) {this.scale.set(props.scale)}
+    }
+}
+
 let units = {}
 let projectiles = [];
+let obstacles = [];
 let animations = {};
 let cards = {};
 let keysDown = [];
 let timers = {playerShoot: 0, cardDraw: 0};
-let timersLength = {playerShoot: 12, cardDraw: 15};
+let timersLength = {playerShoot: 12, cardDraw: 10.5};
 const tileSize = 25;
 const tileThresholds = [0.5, -0.5, 0.3, -0.1] //chances: 10%, 20%, 30%, 40% source: trust me bro
 let deck = new Deck();
@@ -201,12 +216,12 @@ let effects = {
     shrink: function(proj, delta, power) {proj.size -= delta*power[0]; if(proj.size<0.01) {proj.size = 0.01}},
     tracer: function(proj, delta, power) {
         if(Math.round(proj.lived)%power[0]===0) { //Tracer is unique in that it uses an array of two power values, the first multiplies lifespan and speed, the second describes the frequency of tracers appearing (every nth frame)
-            createProjectile("arrow", proj.owner, {initX: proj.initX, initY: proj.initY, movedX: proj.movedX, movedY: proj.movedY, lifespan: proj.lifespan*power[1], speed: proj.speed*power[1], direction: proj.direction, x: proj.x, y: proj.y, locked: proj.locked, size: proj.size, effects: proj.tracerEffects})
+            createProjectile(proj.baseSprite, proj.owner, {initX: proj.initX, initY: proj.initY, movedX: proj.movedX, movedY: proj.movedY, lifespan: proj.lifespan*power[1], speed: proj.speed*power[1], direction: proj.direction, x: proj.x, y: proj.y, locked: proj.locked, size: proj.size, effects: proj.tracerEffects})
         }
     },
     tracerSync: function(proj, delta, power) {
         if(Math.round(proj.lived)%power[0]===0) {
-            createProjectile("arrow", proj.owner, {initX: proj.initX, initY: proj.initY, movedX: proj.movedX, movedY: proj.movedY, birth: proj.birth, lifespan: proj.lifespan, speed: proj.speed*power[1], direction: proj.direction, x: proj.x, y: proj.y, locked: proj.locked, size: proj.size, effects: proj.tracerEffects})
+            createProjectile(proj.baseSprite, proj.owner, {initX: proj.initX, initY: proj.initY, movedX: proj.movedX, movedY: proj.movedY, birth: proj.birth, lifespan: proj.lifespan, speed: proj.speed*power[1], direction: proj.direction, x: proj.x, y: proj.y, locked: proj.locked, size: proj.size, effects: proj.tracerEffects})
         }
     },
     turn: function(proj, delta, power) {proj.direction += delta*power[0]},
@@ -224,4 +239,19 @@ let effects = {
     homing: function(proj) {
         proj.direction = getPlayerDirection(proj);
     }
-};
+}
+let obstacleEffects = {
+    unitCollide: function(obs, unit, delta) {
+        let dir = Math.atan2(unit.y - obs.y, unit.x - obs.x) / rad + 90;
+        if (dir < 0) {
+            dir += 360
+        }
+        unit.x += Math.sin(rad * dir) * delta / 60 * unit.moveSpeed * 2.1;
+        unit.y += Math.sin(rad * (dir - 90)) * delta / 60 * unit.moveSpeed * 2.1;
+        unit.speedX *= 0.66;
+        unit.speedY *= 0.66;
+    },
+    projDelete: function(obs, proj) {
+        deleteProjectile(proj);
+    }
+}

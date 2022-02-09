@@ -4,74 +4,20 @@ function run() {
 
     drawTiles();
 
-    createAnimation("energyballAnim", sheet.animations['energyballanim'], 0.2);
-    createAnimation("shooterWalk", sheet.animations['shooterwalk'], 0.15);
-    createAnimation("bossWalk", sheet.animations['bossmove'], 0.07);
+    //createObstacle("rock", app.view.width/2-32, app.view.height/2-32);
+
+    createAnimation("energyBallAnim", sheet.animations['energyBallAnim'], 0.2);
+    createAnimation("shooterWalk", sheet.animations['shooterWalk'], 0.15);
+    createAnimation("bossWalk", sheet.animations['bossWalk'], 0.07);
 
     createUnit("boss", "boss", {moveSpeed: 25, invTime: 10, maxHp: 2500, ai: true, x: 100});
     createUnit("shooter", "player", {moveSpeed: 70, maxHp: 150, invTime: 40, x: app.view.width-100});
 
-    createCard("fireShield", "Fire Shield", function(){
-        for(let i = 0; i<12; i++) {
-            createProjectile("energyball", "boss", {
-                locked: true,
-                speed: 10,
-                direction: i*30,
-                lifespan: 300,
-                effects: {turn: 720}
-            })}
-        for(let i = 0; i<12; i++) {
-            createProjectile("energyball", "boss", {
-                locked: true,
-                speed: 10,
-                direction: i*30,
-                lifespan: 300,
-                effects: {turn: -720}
-            })}
-    }, 100, 5, "Gives the boss a fire shield");
-    createCard("whirlwind", "Whirlwind", function(){
-        for(let i = 0; i<9; i++) {
-            createProjectile("arrow", "boss", {
-                locked: true,
-                speed: 10,
-                direction: i*40,
-                lifespan: 150,
-                effects: {turn: 1000, tracer: [5, 0.3]}
-            })}
-    }, 100, 3, "Whirlwinds your behind");
-    createCard("nova", "Nova", function(){
-        for(let i = 0; i<90; i++) {
-            createProjectile("arrow", "boss", {
-                speed: 24,
-                direction: i*4,
-                lifespan: 30,
-                effects: {decelerate: 64, turn: 480}
-            })}
-    }, 100, 4, "Throws out a quickie");
-    createCard("curtain", "Curtain", function(){
-        for(let i=0; i<20; i++) {
-            createProjectile("arrow", "boss", {
-                initX: 1600/20*(i),
-                initY: -100,
-                lifespan: 240,
-                direction: 180,
-                speed: 5
-            })
-        }
-    }, 100, 4, "Creates a curtain of projectiles from the top of the screen")
-    createCard("blast", "Blast", function(){
-        for(let i=0; i<5; i++) {
-            createProjectile("arrow", "boss", {
-                direction: getPlayerDirection("boss")+(i-2)*25,
-                speed: 0.2,
-                effects: {turn: (i-2)*-30, accelerate: 10, tracer: [6, 0.75]},
-                lifespan: 120,
-                tracerEffects: {turn: 180}
-            })
-        }
-    }, 250, 5, "Blasts. Effective at long range")
+    createCards(); // all cards, saved in cards.js
 
     Object.keys(cards).forEach(function(i){deck.cards.push(cards[i])}); // automatically add all cards to deck
+
+    createObstacle("rock", {x: app.view.width/2, y: app.view.height/2, scale: 1, effects: {unitCollide: 1, projDelete: 1}}); // testing rock
 
     let debug1 = new PIXI.Text("");
     let debug2 = new PIXI.Text("");
@@ -105,7 +51,8 @@ function run() {
             deck.drawCard();
             timers.cardDraw = elapsed;
         }
-        debug1.text = "Boss health: "+units['boss'].hp + " / " + units['boss'].maxHp;
+        checkObstacles(delta);
+        debug1.text = "Boss health: "+units['boss'].hp;
         debug2.text = "Player health: "+units['player'].hp + " / " + units['player'].maxHp;
     });
 }
