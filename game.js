@@ -17,7 +17,7 @@ function run() {
 
     Object.keys(cards).forEach(function(i){deck.cards.push(cards[i])}); // automatically add all cards to deck
 
-    createObstacle("rock", {x: app.view.width/2, y: app.view.height/2, scale: 1, effects: {unitCollide: 1, projDelete: 1}}); // testing rock
+    createObstacle("rock", {x: app.view.width/2, y: app.view.height/2, scale: 1, effects: {unitCollide: 1, projDeletePlayer: 1}}); // testing rock
 
     let debug1 = new PIXI.Text("");
     let debug2 = new PIXI.Text("");

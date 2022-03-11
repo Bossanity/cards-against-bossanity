@@ -265,6 +265,16 @@ let obstacleEffects = {
     projDelete: function(obs, proj) {
         deleteProjectile(proj);
     },
+    projDeletePlayer: function(obs, proj) {
+        if(proj.owner === "player") {
+            deleteProjectile(proj);
+        }
+    },
+    projDeleteBoss: function(obs, proj) {
+        if(proj.owner !== "player") { //Check if not player so that any potential minions' projectiles also delete
+            deleteProjectile(proj);
+        }
+    },
     unitCardTrigger: function(obs, unit, delta, card) {
         if(unit === units["player"]) {
             card.playFree();
