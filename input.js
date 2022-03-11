@@ -1,5 +1,5 @@
 document.addEventListener('keydown', function(key) {
-    if(!keysDown.includes(key.code)) {
+    if(!keysDown.includes(key.code) && units['player'].hp > 0) {
         keysDown.push(key.code)
     }
 })
@@ -29,15 +29,15 @@ function handleInput() {
     let shootsInputted = "";
     shootKeys.forEach(function(e) {if(keysDown.includes(e)) {shootsInputted += e.slice(5)}});
     if(shootsInputted !== "") {
-        let map = {"Up": 0, "Right": 90, "Down": 180, "Left": 270};
+        let map = {"Up": 0, "Right": 90, "Down": 180, "Left": 270, "UpRight": 45, "RightDown": 135, "DownLeft": 215, "UpLeft": 315};
         let direction = 0;
         Object.keys(map).forEach(function(e) {
             if(shootsInputted.indexOf(e) !== -1) {
                 direction = map[e];
             }
         })
-        if(timers.playerShoot+12<elapsed) {
-            createProjectile("arrow", "player", {direction: direction});
+        if(timers.playerShoot+timersLength.playerShoot<elapsed) {
+            createProjectile("arrow", "player", {direction: direction, lifespan: 35});
             timers.playerShoot = elapsed;
         }
     }
