@@ -1,5 +1,5 @@
 document.addEventListener('keydown', function(key) {
-    if(!keysDown.includes(key.code)) {
+    if(!keysDown.includes(key.code) && units['player'].hp > 0) {
         keysDown.push(key.code)
     }
 })

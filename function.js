@@ -103,10 +103,12 @@ function createCard(name, displayName, effect, cost, count, description) {
 }
 
 function playCard(card, cardSprite, discardSprite) {
-    deck.handCards[(Math.round(cardSprite.x/120))] = "";
-    cardSprite.destroy();
-    card.play();
-    discardSprite.destroy();
+    if(units["boss"].hp>0) { //Disable cards when boss is dead
+        deck.handCards[(Math.round(cardSprite.x / 120))] = "";
+        cardSprite.destroy();
+        card.play();
+        discardSprite.destroy();
+    }
 }
 
 function discardCard(card, cardSprite, discardSprite) {
