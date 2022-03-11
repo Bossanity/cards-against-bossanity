@@ -10,7 +10,7 @@
 },
 "boss.png":
 {
-	"frame": {"x":0,"y":178,"w":60,"h":69},
+	"frame": {"x":0,"y":226,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
@@ -18,7 +18,7 @@
 },
 "bossWalk1.png":
 {
-	"frame": {"x":0,"y":247,"w":60,"h":69},
+	"frame": {"x":0,"y":295,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
@@ -26,7 +26,7 @@
 },
 "bossWalk2.png":
 {
-	"frame": {"x":0,"y":316,"w":60,"h":69},
+	"frame": {"x":0,"y":364,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
@@ -34,7 +34,7 @@
 },
 "bossWalk3.png":
 {
-	"frame": {"x":0,"y":385,"w":60,"h":69},
+	"frame": {"x":0,"y":433,"w":60,"h":69},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":69},
@@ -98,7 +98,7 @@
 },
 "rock.png":
 {
-	"frame": {"x":0,"y":454,"w":64,"h":64},
+	"frame": {"x":0,"y":572,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -175,6 +175,22 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":25,"h":25},
 	"sourceSize": {"w":25,"h":25}
+},
+"trappedCard.png":
+{
+	"frame": {"x":0,"y":502,"w":60,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":70},
+	"sourceSize": {"w":60,"h":70}
+},
+"x.png":
+{
+	"frame": {"x":0,"y":178,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48}
 }},
 "animations": {
 	"bossWalk": ["bossWalk1.png","bossWalk2.png","bossWalk3.png"],
@@ -187,8 +203,8 @@
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":64,"h":518},
+	"size": {"w":64,"h":636},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d6c151dcf1642de1b745627aad4a72e4:566b2b994fb029f3b41675ed6f3d04c1:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:606fc1c76c5c256cd60ac194e959aefe:33cc891533dcf83d8f751eba1cef3a98:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

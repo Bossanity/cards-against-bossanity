@@ -68,8 +68,8 @@ function moveProjectile(proj, delta) {
     }
     //proj.direction being the predefined direction in degrees
     if(elapsed>proj.birth+proj.lifespan) {
-        deleteProjectile(proj)
-        return
+        deleteProjectile(proj);
+        return;
     }
 
     Object.keys(proj.effects).forEach(function(i) { //activate effects
@@ -102,10 +102,34 @@ function createCard(name, displayName, effect, cost, count, description) {
     cards[name] = new Card(displayName, effect, cost, count, description);
 }
 
+function playCard(card, cardSprite, discardSprite) {
+    deck.handCards[(Math.round(cardSprite.x/120))] = "";
+    cardSprite.destroy();
+    card.play();
+    discardSprite.destroy();
+}
+
+function discardCard(card, cardSprite, discardSprite) {
+    deck.handCards[(Math.round(discardSprite.x/120))] = "";
+    cardSprite.destroy();
+    card.discard();
+    discardSprite.destroy();
+    showDiscards(false);
+    triggers.discard.forEach(function(effect) { //Activate all functions listed under triggers.discard, then delete them
+        effect(card);
+    })
+    triggers.discard = [];
+}
+
 function createObstacle(sprite, props) {
     let obstacle = new Obstacle(sprite, props);
     app.stage.addChild(obstacle);
     obstacles.push(obstacle);
+}
+
+function deleteObstacle(obs) {
+    app.stage.removeChild(obs);
+    obstacles.remove(obs);
 }
 
 function drawTiles() {
@@ -190,7 +214,7 @@ function flashDamage(unit, time) {
 function checkObstacles(delta) {
     obstacles.forEach(function(e) {
         Object.keys(units).forEach(function(unit) {
-            unit = units[unit]; //fuckery to make object.forEach work
+            unit = units[unit]; //trickery to make object.forEach work
             if(b.hit(e, unit)) {
                 for(let i in e.effects) {
                     if(i.indexOf("unit")!==-1) {

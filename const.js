@@ -182,6 +182,15 @@ class Card {
         this.inDiscard += 1;
     }
 
+    discard() {
+        this.inHand -= 1;
+        this.inDiscard += 1;
+    }
+
+    playFree() {
+        this.effect();
+    }
+
 }
 
 class Obstacle extends PIXI.AnimatedSprite {
@@ -205,7 +214,9 @@ let animations = {};
 let cards = {};
 let keysDown = [];
 let timers = {playerShoot: 0, cardDraw: 0};
-let timersLength = {playerShoot: 12, cardDraw: 10.5};
+let timersLength = {playerShoot: 12, cardDraw: 105};
+let states = {discarding: false};
+let triggers = {discard: [], playerDamage: [], bossDamage: []}
 const tileSize = 25;
 const tileThresholds = [0.5, -0.5, 0.3, -0.1] //chances: 10%, 20%, 30%, 40% source: trust me bro
 let deck = new Deck();
@@ -253,5 +264,11 @@ let obstacleEffects = {
     },
     projDelete: function(obs, proj) {
         deleteProjectile(proj);
+    },
+    unitCardTrigger: function(obs, unit, delta, card) {
+        if(unit === units["player"]) {
+            card.playFree();
+            deleteObstacle(obs);
+        }
     }
 }

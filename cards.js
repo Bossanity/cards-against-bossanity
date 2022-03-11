@@ -54,7 +54,7 @@ function createCards() {
         }
     }, 100, 4, "Creates a curtain of projectiles from the top of the screen")
 
-    createCard("blast", "Blast", function () {
+    createCard("blast", "Flame Lash", function () {
         for (let i = 0; i < 5; i++) {
             createProjectile("fireArrow", "boss", {
                 direction: getPlayerDirection("boss") + (i - 2) * 25,
@@ -66,4 +66,11 @@ function createCards() {
         }
     }, 250, 5, "Blasts. Effective at long range")
 
+    createCard("trap", "Perfect Trap", function() {
+        deck.drawCard();
+        showDiscards(true);
+        triggers.discard.push(function(card) {
+            createObstacle("trappedCard", {x: units["boss"].x, y: units["boss"].y, effects: {unitCardTrigger: card}})
+        })
+    }, 250, 3, "Draw a card. Discard a card. Turn the discard into a trapped card on the floor.")
 }
